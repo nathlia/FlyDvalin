@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_teste/barrier.dart';
 import 'package:flutter_application_teste/bird.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,9 +19,21 @@ class _HomePageState extends State<HomePage> {
   double time = 0;
   double gravity = -4.9; // gravity strengh
   double velocity = 2.8; //jump strengh
+  double birdWidth = 0.3; //out of 2, 2 being the entire width of the screen
+  double birdHeight = 0.3; //out of 2, 2 being the entire height of the screen
 
 // game settings
   bool gamesHasStarted = false;
+
+// barrier variables
+  static List<double> barrierX = [2, 2 + 1.5];
+  static double barrierWidth = 0.5;
+  List<List<double>> barrierHeight = [
+    // out of 2, where 2 is the entire height of the screen
+    // [topHeight, bottomHeight]
+    [0.6, 0.4],
+    [0.4, 0.6],
+  ];
 
   void startGame() {
     gamesHasStarted = true;
@@ -40,9 +53,26 @@ class _HomePageState extends State<HomePage> {
         _showDialog();
       }
 
+      // keep the map moving (move barriers)
+      moveMap();
+
       //keep the time going!
       time += 0.05;
     });
+  }
+
+  void moveMap() {
+    for (int i = 0; i < barrierX.length; i++) {
+      // keep barriers moving
+      setState(() {
+        barrierX[i] -= 0.05;
+      });
+
+      //if barrier exits the left part of the screen, keep it looping
+      if (barrierX[i] < -1.5) {
+        barrierX[i] += 3;
+      }
+    }
   }
 
   void resetGame() {
@@ -102,8 +132,16 @@ class _HomePageState extends State<HomePage> {
       return true;
     }
 
-    //check if the bird is hitting a barrier
-
+    // hits barriers
+    // checks if bird is within x coordinates and y coordinates of barriers
+    for (int i = 0; i < barrierX.length; i++) {
+      if (barrierX[i] <= birdWidth &&
+          barrierX[i] + barrierWidth >= -birdWidth &&
+          (birdY <= -1 + barrierHeight[i][0] ||
+              birdY + birdHeight >= 1 - barrierHeight[i][1])) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -115,7 +153,7 @@ class _HomePageState extends State<HomePage> {
           body: Column(
             children: [
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Container(
                     decoration: const BoxDecoration(
                         gradient: LinearGradient(
@@ -130,9 +168,48 @@ class _HomePageState extends State<HomePage> {
                     child: Center(
                       child: Stack(
                         children: [
+                          // bird
                           MyBird(
                             birdY: birdY,
+                            birdWidth: birdWidth,
+                            birdHeight: birdHeight,
                           ),
+
+                          //tap to play
+                          //MyCoverScreen(gamesHasStarted : gamesHasStarted)
+
+                          // Top barrier 0
+                          MyBarrier(
+                            barrierX: barrierX[0],
+                            barrierWidth: barrierWidth,
+                            barrierHeight: barrierHeight[0][0],
+                            isThisBottomBarrier: false,
+                          ),
+
+                          // Bottom barrier 0
+                          MyBarrier(
+                            barrierX: barrierX[0],
+                            barrierWidth: barrierWidth,
+                            barrierHeight: barrierHeight[0][1],
+                            isThisBottomBarrier: true,
+                          ),
+
+                          // Top barrier 1
+                          MyBarrier(
+                            barrierX: barrierX[1],
+                            barrierWidth: barrierWidth,
+                            barrierHeight: barrierHeight[1][0],
+                            isThisBottomBarrier: false,
+                          ),
+
+                          // Bottom barrier 1
+                          MyBarrier(
+                            barrierX: barrierX[1],
+                            barrierWidth: barrierWidth,
+                            barrierHeight: barrierHeight[1][1],
+                            isThisBottomBarrier: true,
+                          ),
+
                           Container(
                             alignment: const Alignment(0, -0.5),
                             child: Text(
