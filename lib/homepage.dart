@@ -19,8 +19,12 @@ class _HomePageState extends State<HomePage> {
   double gravity = -4.9; // gravity strengh
   double velocity = 2.8; //jump strengh
 
-  void jump() {
-    Timer.periodic(Duration(milliseconds: 60), (timer) {
+// game settings
+  bool gamesHasStarted = false;
+
+  void startGame() {
+    gamesHasStarted = true;
+    Timer.periodic(const Duration(milliseconds: 60), (timer) {
       // a real phusical jump is the same as an upside down parabola
       // this is an quadrantric equation
       height = gravity * time * time + velocity * time;
@@ -30,8 +34,10 @@ class _HomePageState extends State<HomePage> {
       });
 
       //check if birtd is dead
-      if (birdY < -1) {
+      if (birdIsDead()) {
         timer.cancel();
+        gamesHasStarted = false;
+        _showDialog();
       }
 
       //keep the time going!
@@ -39,10 +45,72 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void resetGame() {
+    Navigator.pop(context); // dismises the alert dialog
+    setState(() {
+      birdY = 0;
+      gamesHasStarted = false;
+      time = 0;
+      initialPos = birdY;
+    });
+  }
+
+  void _showDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.black,
+            title: const Center(
+                child: Text(
+              "G A M E  O V E R",
+              style: TextStyle(color: Colors.white),
+            )),
+            actions: [
+              GestureDetector(
+                onTap: resetGame,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Container(
+                    padding: const EdgeInsets.all(7),
+                    color: Colors.white,
+                    child: const Text(
+                      'PLAY AGAIN',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        });
+  }
+
+  void jump() {
+    setState(() {
+      time = 0;
+      initialPos = birdY;
+    });
+  }
+
+  bool birdIsDead() {
+    //check if the bird is hitting the top or bottom of the screen
+    if (birdY < -1 || birdY > 1) {
+      return true;
+    }
+
+    //check if the bird is hitting a barrier
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: jump,
+        onTap: gamesHasStarted ? jump : startGame,
         child: Scaffold(
           body: Column(
             children: [
@@ -64,6 +132,14 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           MyBird(
                             birdY: birdY,
+                          ),
+                          Container(
+                            alignment: const Alignment(0, -0.5),
+                            child: Text(
+                              gamesHasStarted ? ' ' : 'TAP TO PLAY',
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 20),
+                            ),
                           )
                         ],
                       ),
