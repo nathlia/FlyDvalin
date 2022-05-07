@@ -17,8 +17,8 @@ class _HomePageState extends State<HomePage> {
   double initialPos = birdY;
   double height = 0;
   double time = 0;
-  double gravity = -4.9; // gravity strengh
-  double velocity = 2.8; //jump strengh
+  double gravity = -4.9; // gravity strength
+  double velocity = 2.8; //jump strength
   double birdWidth = 0.3; //out of 2, 2 being the entire width of the screen
   double birdHeight = 0.3; //out of 2, 2 being the entire height of the screen
   int score = 0;
@@ -40,8 +40,8 @@ class _HomePageState extends State<HomePage> {
   void startGame() {
     gamesHasStarted = true;
     Timer.periodic(const Duration(milliseconds: 60), (timer) {
-      // a real phusical jump is the same as an upside down parabola
-      // this is an quadrantric equation
+      // a real physical jump is the same as an upside down parabola
+      // this is an quadratic equation
       height = gravity * time * time + velocity * time;
 
       setState(() {
@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void resetGame() {
-    Navigator.pop(context); // dismises the alert dialog
+    Navigator.pop(context); // dismisses the alert dialog
     setState(() {
       getBestScore(score);
       score = 0;
@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            backgroundColor: Colors.black,
+            backgroundColor: const Color(0xFFE164B2),
             title: const Center(
                 child: Text(
               "G A M E  O V E R",
@@ -109,21 +109,22 @@ class _HomePageState extends State<HomePage> {
             )),
             actions: [
               GestureDetector(
-                onTap: resetGame,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Container(
-                    padding: const EdgeInsets.all(7),
-                    color: Colors.white,
-                    child: const Text(
-                      'PLAY AGAIN',
-                      style: TextStyle(
-                        color: Colors.black,
+                  onTap: resetGame,
+                  child: Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Container(
+                        padding: const EdgeInsets.all(7),
+                        color: Colors.white,
+                        child: const Text(
+                          'PLAY AGAIN',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              )
+                  ))
             ],
           );
         });
