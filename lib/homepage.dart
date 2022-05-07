@@ -137,8 +137,8 @@ class _HomePageState extends State<HomePage> {
     for (int i = 0; i < barrierX.length; i++) {
       if (barrierX[i] <= birdWidth &&
           barrierX[i] + barrierWidth >= -birdWidth &&
-          (birdY <= -1 + barrierHeight[i][0] ||
-              birdY + birdHeight >= 1 - barrierHeight[i][1])) {
+          (birdY <= -1.047 + barrierHeight[i][0] ||
+              birdY + birdHeight >= 1.047 - barrierHeight[i][1])) {
         return true;
       }
     }
@@ -230,6 +230,36 @@ class _HomePageState extends State<HomePage> {
                     Color(0xFFE681AD),
                     Color(0xFFE164B2),
                   ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const [
+                              Text("SCORE",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20)),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text("0",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 35)),
+                            ]),
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const [
+                              Text("BEST",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20)),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text("10",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 35)),
+                            ]),
+                      ]),
                 ),
               ),
             ],
