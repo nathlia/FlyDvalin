@@ -8,13 +8,13 @@ class MyBarrier extends StatelessWidget {
   final barrierX;
   final bool isThisBottomBarrier;
 
-  const MyBarrier(
-      {Key? key,
-      this.barrierHeight,
-      this.barrierWidth,
-      required this.isThisBottomBarrier,
-      this.barrierX})
-      : super(key: key);
+  const MyBarrier({
+    Key? key,
+    this.barrierHeight,
+    this.barrierWidth,
+    required this.isThisBottomBarrier,
+    this.barrierX,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

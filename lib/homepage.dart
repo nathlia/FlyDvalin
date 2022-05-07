@@ -21,6 +21,8 @@ class _HomePageState extends State<HomePage> {
   double velocity = 2.8; //jump strengh
   double birdWidth = 0.3; //out of 2, 2 being the entire width of the screen
   double birdHeight = 0.3; //out of 2, 2 being the entire height of the screen
+  int score = 0;
+  int bestScore = 0;
 
 // game settings
   bool gamesHasStarted = false;
@@ -75,9 +77,17 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void getBestScore(score) {
+    if (score > bestScore) {
+      bestScore = score;
+    }
+  }
+
   void resetGame() {
     Navigator.pop(context); // dismises the alert dialog
     setState(() {
+      getBestScore(score);
+      score = 0;
       birdY = 0;
       gamesHasStarted = false;
       time = 0;
@@ -142,6 +152,7 @@ class _HomePageState extends State<HomePage> {
         return true;
       }
     }
+    score++;
     return false;
   }
 
@@ -235,28 +246,28 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
-                              Text("SCORE",
+                            children: [
+                              const Text("SCORE",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20)),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
-                              Text("0",
-                                  style: TextStyle(
+                              Text("$score",
+                                  style: const TextStyle(
                                       color: Colors.white, fontSize: 35)),
                             ]),
                         Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
-                              Text("BEST",
+                            children: [
+                              const Text("BEST",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20)),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
-                              Text("10",
-                                  style: TextStyle(
+                              Text("$bestScore",
+                                  style: const TextStyle(
                                       color: Colors.white, fontSize: 35)),
                             ]),
                       ]),
